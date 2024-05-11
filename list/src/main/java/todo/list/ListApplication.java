@@ -3,7 +3,7 @@ package todo.list;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication(scanBasePackages = { "todo.controllers", "todo" })
+@SpringBootApplication
 public class ListApplication {
 
 	public static void main(String[] args) {
