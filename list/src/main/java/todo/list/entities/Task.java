@@ -12,7 +12,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "tasks")
-public class Task implements Serializable{
+public class Task implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,13 +22,13 @@ public class Task implements Serializable{
 
 	@Column(nullable = false)
 	private String nome;
-	
+
 	@Column(nullable = false)
 	private Boolean concluida = false;
-	
+
 	@Column(nullable = false)
 	private Long elementoPai = Long.valueOf(0);
-	
+
 	@Column(nullable = false)
 	private Date createdAt = new Date();
 
@@ -67,9 +67,9 @@ public class Task implements Serializable{
 	}
 
 	public void setConcluida(Boolean concluida) {
-		if(concluida == null){
+		if (concluida == null) {
 			this.concluida = false;
-		}else{
+		} else {
 			this.concluida = concluida;
 		}
 	}
@@ -79,9 +79,9 @@ public class Task implements Serializable{
 	}
 
 	public void setElementoPai(Long elementoPai) {
-		if(elementoPai == null){
+		if (elementoPai == null) {
 			this.elementoPai = Long.valueOf(0);
-		}else{
+		} else {
 			this.elementoPai = elementoPai;
 		}
 	}
@@ -91,9 +91,9 @@ public class Task implements Serializable{
 	}
 
 	public void setCreatedAt(Date createdAt) {
-		if(createdAt == null){
+		if (createdAt == null) {
 			this.createdAt = new Date();
-		}else{
+		} else {
 			this.createdAt = createdAt;
 		}
 	}
@@ -173,5 +173,5 @@ public class Task implements Serializable{
 		} else if (!updatedAt.equals(other.updatedAt))
 			return false;
 		return true;
-	}	
+	}
 }

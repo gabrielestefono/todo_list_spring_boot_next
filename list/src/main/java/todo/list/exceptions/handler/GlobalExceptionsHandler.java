@@ -22,58 +22,58 @@ import todo.list.exceptions.messages.CustomMessage;
 
 @RestControllerAdvice
 @RestController
-public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler{
+public class GlobalExceptionsHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(BadRequestException.class)
-	public ResponseEntity<CustomMessage> badRequestException(BadRequestException ex){
+	public ResponseEntity<CustomMessage> badRequestException(BadRequestException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(UnauthorizedException.class)
-	public ResponseEntity<CustomMessage> unauthorizedException(UnauthorizedException ex){
+	public ResponseEntity<CustomMessage> unauthorizedException(UnauthorizedException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.UNAUTHORIZED);
 	}
 
 	@ExceptionHandler(ForbiddenException.class)
-	public ResponseEntity<CustomMessage> forbiddenException(ForbiddenException ex){
+	public ResponseEntity<CustomMessage> forbiddenException(ForbiddenException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.FORBIDDEN);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
-	public ResponseEntity<CustomMessage> notFoundException(NotFoundException ex){
+	public ResponseEntity<CustomMessage> notFoundException(NotFoundException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(MethodNotAllowedException.class)
-	public ResponseEntity<CustomMessage> methodNotAllowedException(MethodNotAllowedException ex){
+	public ResponseEntity<CustomMessage> methodNotAllowedException(MethodNotAllowedException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 	@ExceptionHandler(ConflictException.class)
-	public ResponseEntity<CustomMessage> conflictException(ConflictException ex){
+	public ResponseEntity<CustomMessage> conflictException(ConflictException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(InternalServerErrorException.class)
-	public ResponseEntity<CustomMessage> internalServerErrorException(InternalServerErrorException ex){
+	public ResponseEntity<CustomMessage> internalServerErrorException(InternalServerErrorException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ServiceUnavailableException.class)
-	public ResponseEntity<CustomMessage> serviceUnavailableException(ServiceUnavailableException ex){
+	public ResponseEntity<CustomMessage> serviceUnavailableException(ServiceUnavailableException ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.SERVICE_UNAVAILABLE);
 	}
 
 	@ExceptionHandler(Exception.class)
-	public ResponseEntity<CustomMessage> allOtherException(Exception ex){
+	public ResponseEntity<CustomMessage> allOtherException(Exception ex) {
 		CustomMessage customMessage = new CustomMessage(new Date(), ex.getMessage());
 		return new ResponseEntity<>(customMessage, HttpStatus.BAD_REQUEST);
 	}

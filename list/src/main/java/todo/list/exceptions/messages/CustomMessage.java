@@ -3,11 +3,11 @@ package todo.list.exceptions.messages;
 import java.io.Serializable;
 import java.util.Date;
 
-public class CustomMessage implements Serializable{
+public class CustomMessage implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Date timestamp;
-	
+
 	private String message;
 
 	public CustomMessage(Date timestamp, String message) {

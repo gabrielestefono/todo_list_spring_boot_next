@@ -1,0 +1,49 @@
+.taskList {
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+
+    > div {
+        width: 46rem;
+        margin-top: 4rem;
+        display: flex;
+        flex-direction: column;
+
+        > div:first-of-type {
+            display: flex;
+            justify-content: space-between;
+
+            > div.created, > div.concluded{
+                display: flex;
+                gap: .5rem;
+                font-family: Inter, sans-serif;
+                font-size: .875rem;
+                font-weight: 700;
+    
+                p {
+                    color: #4ea8de;
+                }
+
+                > span {
+                    padding: .125rem .5rem;
+                    background-color: #333;
+                    border-radius: 6.25rem;
+                    color: #fff;
+                }
+            }
+        }
+
+        > hr{
+            border: none;
+            height: 2px;
+            background-color: #333;
+            margin: 20px 0;
+        }
+
+        > div:last-child{
+            display: flex;
+            gap: .75rem;
+            flex-direction: column;
+        }
+    }
+}
