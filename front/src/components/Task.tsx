@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { TaskContext } from "@/contexts/TaskContext";
+import Swal from 'sweetalert2';
 
 export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
   const router = useRouter();
@@ -24,11 +25,68 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
       })
   }
 
+  function editName(){
+    Swal.fire({
+      input: "text",
+      inputValue: taskItem.nome,
+      showCancelButton: true,
+      confirmButtonText: "Alterar",
+      cancelButtonText: "Cancelar",
+      background: "#1a1a1a",
+      color: "white",
+      animation: true,
+      titleText: "Editar tarefa",
+      text: "Digite o nome para a tarefa:",
+      cancelButtonColor: "#4EA8DE",
+    }).then(result => {
+      if(result.isConfirmed && result.value != ''){
+        fetch(`http://localhost:8080/task/name/${taskItem.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "PATCH",
+          body: JSON.stringify({
+            nome: result.value
+          })
+        }).then(()=>{
+          setAtualizar(true)
+        }).catch(err=>console.log(err));
+      }
+    })
+  }
+
+
+  function deleteTask(){
+    Swal.fire({
+      showCancelButton: true,
+      confirmButtonText: "Deletar",
+      cancelButtonText: "Cancelar",
+      background: "#1a1a1a",
+      color: "white",
+      animation: true,
+      titleText: "Deletar tarefa",
+      text: "Tem certeza que deseja deletar?",
+      cancelButtonColor: "#4EA8DE",
+      confirmButtonColor: "#C92722"
+    }).then(result => {
+      if(result.isConfirmed){
+        fetch(`http://localhost:8080/task/${taskItem.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          method: "DELETE",
+        }).then(()=>{
+          setAtualizar(true)
+        }).catch(err=>console.log(err));
+      }
+    })
+  }
+
   return (
     <div className={styles.task}>
       <button onClick={markAsMade} className={taskItem.concluida ? styles.concluida : ""}></button>
-      <Link href={`"task/${taskItem.id}"`}>{taskItem.nome}</Link>
-      <button>
+      <a href={`/task/${taskItem.id}`}>{taskItem.nome}</a>
+      <button onClick={editName}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -44,7 +102,7 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
           ></path>
         </svg>
       </button>
-      <button>
+      <button onClick={deleteTask}>
         <img
           src="/icons/lixo.svg"
           alt="excluir tarefa"

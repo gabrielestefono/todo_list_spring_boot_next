@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import todo.list.dto.ChangeNameRequestDto;
+import todo.list.dto.FindSpecificTaskDTO;
 import todo.list.entities.Task;
 import todo.list.exceptions.errors.BadRequestException;
 import todo.list.repositories.TaskRepository;
@@ -18,21 +19,31 @@ public class TaskService {
 		this.taskRepository = taskRepository;
 	}
 
+	private List<Task> findWhereId(Long id) {
+		return this.taskRepository.findByElementoPai(id);
+	}
+
+	private Task findById(Long id) {
+		return this.taskRepository.findById(id).orElseThrow(() -> new BadRequestException("A tarefa não existe!"));
+	}
+
 	public List<Task> findAll() {
-		return this.taskRepository.findAll();
+		return this.findWhereId(Long.valueOf(0));
 	}
 
 	public Task create(Task task) {
 		return this.taskRepository.save(task);
 	}
 
-	public Task findById(Long id) {
-		return this.taskRepository.findById(id).orElseThrow(() -> new BadRequestException("A tarefa não existe!"));
+	public FindSpecificTaskDTO findSpecificTask(Long id){
+		Task taskAtual = this.findById(id);
+		List<Task> tarefasFilhas = this.findWhereId(taskAtual.getId());
+		return new FindSpecificTaskDTO(taskAtual, tarefasFilhas);
 	}
 
-	public Task changeName(Long id, ChangeNameRequestDto taskName) {
+	public Task changeName(Long id, ChangeNameRequestDto taskNome) {
 		Task taskFound = this.findById(id);
-		taskFound.setNome(taskName.getName());
+		taskFound.setNome(taskNome.getNome());
 		return this.taskRepository.save(taskFound);
 	}
 

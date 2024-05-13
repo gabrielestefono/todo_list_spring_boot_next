@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import todo.list.dto.ChangeNameRequestDto;
+import todo.list.dto.FindSpecificTaskDTO;
 import todo.list.entities.Task;
 import todo.list.services.TaskService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,8 +41,8 @@ public class TaskController {
     }
     
     @GetMapping(value = "/{id}", produces = "application/json")
-    public Task findById(@PathVariable Long id) {
-        return this.taskService.findById(id);
+    public FindSpecificTaskDTO findById(@PathVariable Long id) {
+        return this.taskService.findSpecificTask(id);
     }
 
     @PatchMapping(value = "/name/{id}", consumes = "application/json", produces = "application/json")

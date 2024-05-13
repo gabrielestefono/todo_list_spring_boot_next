@@ -1,13 +1,13 @@
 package todo.list.dto;
 
 public class ChangeNameRequestDto {
-	private String name;
+	private String nome;
 
-	public String getName() {
-		return this.name;
+	public String getNome() {
+		return this.nome;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 }

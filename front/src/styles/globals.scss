@@ -53,3 +53,22 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+// Sweet Alert
+
+.swal2-container{
+	font-family: var(--font-inter);
+}
+
+.swal2-icon{
+	width: 2rem;
+	height: 2rem;
+
+	> div{
+		font-size: 1.5rem !important;
+	}
+}
+
+.swal2-input{
+	outline: none;
+}
