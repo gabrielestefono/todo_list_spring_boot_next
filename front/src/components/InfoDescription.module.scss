@@ -27,7 +27,7 @@
     margin-top: 2rem;
     gap: 1.25rem;
 
-    > button{
+    > button, > a > button{
       width: fit-content;
       padding: 1rem;
       border-radius: .25rem;
@@ -40,11 +40,11 @@
       font-size: .875rem;
     }
 
-    > button:first-child{
+    > button{
       background-color: #4ea8de;
     }
 
-    > button:last-child{
+    > a > button{
       background-color: #5e60ce;
     }
   }

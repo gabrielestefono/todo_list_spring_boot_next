@@ -2,29 +2,55 @@ import Head from "next/head";
 import Header from "@/components/Header";
 import Form from "@/components/Form";
 import TaskList from "@/components/TaskList";
-import Layout from "@/layouts/Layout";
 import { Task } from "@/interface/Task.interface";
 import { GetServerSideProps } from "next";
-import { useParams } from "next/navigation";
 import { TaskChild } from "@/interface/TaskChild.interface";
 import InfoDescription from "@/components/InfoDescription";
+import { useContext, useEffect } from "react";
+import { TaskContext } from "@/contexts/TaskContext";
 
 export const getServerSideProps: GetServerSideProps = async (context)=>{
   const id = context.params!.id;
+  let idNumber: number = 0;
+  idNumber = +id!;
+
+  if(idNumber === undefined || isNaN(idNumber)){
+    idNumber = 0;
+  }
+  
   const res: TaskChild = await fetch(`http://localhost:8080/task/${id}`)
-    .then(response => response.json())
-    .catch(err => console.log(err))
+    .then(response => {
+      if(response.status === 200) {
+        return response.json()
+      }else if(response.status === 500){
+        return null;
+      }
+      return undefined;
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  
+  if(res === undefined || res === null){
+    return {notFound: true};
+  }
 
   return {
     props: {
       taskAtual: res.taskAtual,
       taskList: res.tasksFilhas,
+      idNumber,
     },
   };
 }
 
-export default function TaskPage( props : Readonly<{taskAtual: Task, taskList: Task[]}>){
-  const { id } = useParams();
+export default function TaskPage( {taskAtual, taskList, idNumber} : Readonly<{taskAtual: Task, taskList: Task[], idNumber: number}>){
+  const { setTaskList } = useContext(TaskContext);
+
+  useEffect(()=>{
+    setTaskList(taskList);
+  }, [idNumber, taskAtual, taskList])
+
   return (
     <>
       <Head>
@@ -32,14 +58,12 @@ export default function TaskPage( props : Readonly<{taskAtual: Task, taskList: T
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico"/>
       </Head>
-      <Layout taskList={props.taskList} id={+id}>
-        <main>
-          <Header/>
-          <Form id={props.taskAtual.id}/>
-          <InfoDescription task={props.taskAtual}/>
-          <TaskList/>
-        </main>
-      </Layout>
+      <main>
+        <Header/>
+        <Form id={taskAtual.id}/>
+        <InfoDescription task={taskAtual}/>
+        <TaskList/>
+      </main>
     </>
   );
 }

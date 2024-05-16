@@ -1,33 +1,41 @@
 import React, { useContext, useState } from 'react';
 import styles from './Form.module.scss';
 import { TaskContext } from '@/contexts/TaskContext';
+import { Task } from '@/interface/Task.interface';
+import { TaskChild } from '@/interface/TaskChild.interface';
 
-export default function Form({ id }: {id? : number}){
+export default function Form({ id }: Readonly<{id? : number}>){
   const [name, setName] = useState("");
-
-  const { setAtualizar, setAtualizarEspecifico } = useContext(TaskContext);
+  const { setTaskList } = useContext(TaskContext);
 
   function criarTarefa(e: React.FormEvent<HTMLFormElement>){
-    const options = id != 0 ? JSON.stringify({nome: name, elementoPai: id}) : JSON.stringify({nome: name});
     e.preventDefault();
-    if(name !== ""){
-      fetch("http://localhost:8080/task", {
+    fetch("http://localhost:8080/task", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: options,
+      body: JSON.stringify({
+        nome: name,
+        elementoPai: id
+      }),
     })
-     .then((response) => response.json())
-     .then((data) => {
-        if(id){
-          setAtualizarEspecifico(true);
+      .then(response => response.json)
+      .then(() => {
+        if(!id){
+          fetch("http://localhost:8080/task")
+           .then(response => response.json())
+           .then((data : Task[]) => {
+            setTaskList(data);
+           });
         }else{
-          setAtualizar(true);
+          fetch(`http://localhost:8080/task/${id}`)
+           .then(response => response.json())
+           .then((data : TaskChild) => {
+            setTaskList(data.tasksFilhas);
+           });
         }
-        setName("");
-      });
-    }
+      })
   }
 
   return (

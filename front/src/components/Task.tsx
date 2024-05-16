@@ -1,14 +1,15 @@
 import { Task as TaskItem } from "@/interface/Task.interface";
 import styles from "./Task.module.scss";
-import Link from "next/link";
 import { useRouter } from "next/router";
-import { useContext } from "react";
-import { TaskContext } from "@/contexts/TaskContext";
 import Swal from 'sweetalert2';
+import Link from "next/link";
+import useFindTask from "@/hooks/useTaskFind";
+import useFindChildTask from "@/hooks/useTaskChildFind";
 
 export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
   const router = useRouter();
-  const { setAtualizar } = useContext(TaskContext);
+  const { setFind } = useFindTask();
+  const { setFindchild } = useFindChildTask(taskItem.elementoPai);
   
   function markAsMade() {
     fetch(`http://localhost:8080/task/made/${taskItem.id}`, {
@@ -18,7 +19,13 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
       },
     })
       .then((response) => response.json())
-      .then(() => {setAtualizar(true)})
+      .then(() => {
+        if(taskItem.elementoPai == 0){
+          setFind(true);
+        }else{
+          setFindchild(true);
+        }
+      })
       .catch(error => {
         console.log(error);
         router.push("/404")
@@ -49,7 +56,11 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
             nome: result.value
           })
         }).then(()=>{
-          setAtualizar(true)
+          if(taskItem.elementoPai == 0){
+            setFind(true);
+          }else{
+            setFindchild(true);
+          }
         }).catch(err=>console.log(err));
       }
     })
@@ -76,7 +87,11 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
           },
           method: "DELETE",
         }).then(()=>{
-          setAtualizar(true)
+          if(taskItem.elementoPai == 0){
+            setFind(true);
+          }else{
+            setFindchild(true);
+          }
         }).catch(err=>console.log(err));
       }
     })
@@ -85,7 +100,7 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
   return (
     <div className={styles.task}>
       <button onClick={markAsMade} className={taskItem.concluida ? styles.concluida : ""}></button>
-      <a href={`/task/${taskItem.id}`}>{taskItem.nome}</a>
+      <Link href={`/task/${taskItem.id}`}>{taskItem.nome}</Link>
       <button onClick={editName}>
         <svg
           xmlns="http://www.w3.org/2000/svg"

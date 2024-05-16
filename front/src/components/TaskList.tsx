@@ -2,9 +2,10 @@ import { useContext } from 'react';
 import styles from './TaskList.module.scss';
 import { TaskContext } from '@/contexts/TaskContext';
 import Task from './Task';
+import { Task as TaskItems } from '@/interface/Task.interface';
 
 export default function TaskList() {
-  const {taskList} = useContext(TaskContext);
+  const { taskList } = useContext(TaskContext);
   return (
       <div className={styles.taskList}>
         <div>
@@ -20,7 +21,7 @@ export default function TaskList() {
           </div>
           <hr/>
           <div>
-            {taskList?.map((taskItem) => <Task key={taskItem.id} taskItem={taskItem}/>)}
+            {taskList?.map((taskItem: TaskItems) => <Task key={taskItem.id} taskItem={taskItem}/>)}
           </div>
         </div>
       </div>

@@ -2,9 +2,10 @@ import Head from "next/head";
 import Header from "@/components/Header";
 import Form from "@/components/Form";
 import TaskList from "@/components/TaskList";
-import Layout from "@/layouts/Layout";
 import { Task } from "@/interface/Task.interface";
 import { GetServerSideProps } from "next";
+import { TaskContext } from "@/contexts/TaskContext";
+import { useContext, useEffect } from "react";
 
 export const getServerSideProps: GetServerSideProps = async (context)=>{
   const res: Task[] = await fetch('http://localhost:8080/task')
@@ -18,7 +19,11 @@ export const getServerSideProps: GetServerSideProps = async (context)=>{
   };
 }
 
-export default function Home( props : Readonly<{ taskList: Task[] }>){
+export default function Home( {taskList} : Readonly<{ taskList : Task[] }>){
+  const { setTaskList } = useContext(TaskContext);
+  useEffect(()=>{
+    setTaskList(taskList);
+  }, [taskList])
   return (
     <>
       <Head>
@@ -26,13 +31,11 @@ export default function Home( props : Readonly<{ taskList: Task[] }>){
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico"/>
       </Head>
-      <Layout taskList={props.taskList}>
-        <main>
-          <Header/>
-          <Form/>
-          <TaskList/>
-        </main>
-      </Layout>
+      <main>
+        <Header/>
+        <Form id={0}/>
+        <TaskList/>
+      </main>
     </>
   );
 }
