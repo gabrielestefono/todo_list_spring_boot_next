@@ -7,15 +7,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import todo.list.dto.ChangeNameRequestDto;
 import todo.list.dto.FindSpecificTaskDTO;
+import todo.list.entities.Description;
 import todo.list.entities.Task;
 import todo.list.services.TaskService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -24,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @CrossOrigin("*")
 public class TaskController {
 
-    private TaskService taskService;
+    private final TaskService taskService;
     
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
@@ -53,9 +54,19 @@ public class TaskController {
     public Task maskAsMade(@PathVariable Long id) {
         return this.taskService.maskAsMade(id);
     }
-    
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable Long id) {
-        this.taskService.delete(id);
+
+    @PatchMapping(value = "/description/{id}")
+    public Task delete(@PathVariable Long id, @RequestBody Description description) {
+        return this.taskService.addDescription(id, description);
+    }
+
+    @DeleteMapping(value = "/delete-all/{id}")
+    public void deleteAll(@PathVariable Long id) {
+        this.taskService.deleteAll(id);
+    }
+
+    @DeleteMapping(value = "/delete-one/{id}")
+    public void deleteOne(@PathVariable Long id) {
+        this.taskService.deleteOne(id);
     }
 }

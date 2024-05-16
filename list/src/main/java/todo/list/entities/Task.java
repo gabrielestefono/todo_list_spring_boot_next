@@ -5,9 +5,12 @@ import java.util.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -30,20 +33,20 @@ public class Task implements Serializable {
 	private Long elementoPai = Long.valueOf(0);
 
 	@Column(nullable = false)
-	private Date createdAt = new Date();
+	private Boolean temFilhos = false;
 
-	@Column
-	private Long descriptionId;
+	@Column(nullable = false)
+	private Date createdAt = new Date();
 
 	@Column
 	private Date updatedAt;
 
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "description_id")
+	private Description description;
+
 	public Task() {
 		// Empty Constructor
-	}
-
-	public static long getSerialversionuid() {
-		return serialVersionUID;
 	}
 
 	public Long getId() {
@@ -67,11 +70,7 @@ public class Task implements Serializable {
 	}
 
 	public void setConcluida(Boolean concluida) {
-		if (concluida == null) {
-			this.concluida = false;
-		} else {
-			this.concluida = concluida;
-		}
+		this.concluida = concluida;
 	}
 
 	public Long getElementoPai() {
@@ -79,11 +78,15 @@ public class Task implements Serializable {
 	}
 
 	public void setElementoPai(Long elementoPai) {
-		if (elementoPai == null) {
-			this.elementoPai = Long.valueOf(0);
-		} else {
-			this.elementoPai = elementoPai;
-		}
+		this.elementoPai = elementoPai;
+	}
+
+	public boolean getTemFilhos() {
+		return temFilhos;
+	}
+
+	public void setTemFilhos(Boolean temFilhos) {
+		this.temFilhos = temFilhos;
 	}
 
 	public Date getCreatedAt() {
@@ -91,19 +94,7 @@ public class Task implements Serializable {
 	}
 
 	public void setCreatedAt(Date createdAt) {
-		if (createdAt == null) {
-			this.createdAt = new Date();
-		} else {
-			this.createdAt = createdAt;
-		}
-	}
-
-	public Long getDescriptionId() {
-		return descriptionId;
-	}
-
-	public void setDescriptionId(Long descriptionId) {
-		this.descriptionId = descriptionId;
+		this.createdAt = createdAt;
 	}
 
 	public Date getUpdatedAt() {
@@ -112,6 +103,14 @@ public class Task implements Serializable {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public Description getDescription() {
+		return description;
+	}
+
+	public void setDescription(Description description) {
+		this.description = description;
 	}
 
 	@Override
@@ -123,8 +122,8 @@ public class Task implements Serializable {
 		result = prime * result + ((concluida == null) ? 0 : concluida.hashCode());
 		result = prime * result + ((elementoPai == null) ? 0 : elementoPai.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
-		result = prime * result + ((descriptionId == null) ? 0 : descriptionId.hashCode());
 		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
+		result = prime * result + ((description == null) ? 0 : description.hashCode());
 		return result;
 	}
 
@@ -162,15 +161,15 @@ public class Task implements Serializable {
 				return false;
 		} else if (!createdAt.equals(other.createdAt))
 			return false;
-		if (descriptionId == null) {
-			if (other.descriptionId != null)
-				return false;
-		} else if (!descriptionId.equals(other.descriptionId))
-			return false;
 		if (updatedAt == null) {
 			if (other.updatedAt != null)
 				return false;
 		} else if (!updatedAt.equals(other.updatedAt))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
 			return false;
 		return true;
 	}

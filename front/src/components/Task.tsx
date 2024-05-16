@@ -1,38 +1,30 @@
 import { Task as TaskItem } from "@/interface/Task.interface";
 import styles from "./Task.module.scss";
 import { useRouter } from "next/router";
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
 import Link from "next/link";
 import useFindTask from "@/hooks/useTaskFind";
 import useFindChildTask from "@/hooks/useTaskChildFind";
+import markAsMade from "@/utils/MarkAsMade";
 
 export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
   const router = useRouter();
   const { setFind } = useFindTask();
   const { setFindchild } = useFindChildTask(taskItem.elementoPai);
-  
-  function markAsMade() {
-    fetch(`http://localhost:8080/task/made/${taskItem.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
+
+  function markAsMadeFunction() {
+    markAsMade(taskItem.id, taskItem.elementoPai).then((result) => {
+      if (result) {
+        setFind(true);
+      } else {
+        setFindchild(true);
+      }
+    }).catch(err => {
+      return { notFound: true };
     })
-      .then((response) => response.json())
-      .then(() => {
-        if(taskItem.elementoPai == 0){
-          setFind(true);
-        }else{
-          setFindchild(true);
-        }
-      })
-      .catch(error => {
-        console.log(error);
-        router.push("/404")
-      })
   }
 
-  function editName(){
+  function editName() {
     Swal.fire({
       input: "text",
       inputValue: taskItem.nome,
@@ -45,29 +37,30 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
       titleText: "Editar tarefa",
       text: "Digite o nome para a tarefa:",
       cancelButtonColor: "#4EA8DE",
-    }).then(result => {
-      if(result.isConfirmed && result.value != ''){
+    }).then((result) => {
+      if (result.isConfirmed && result.value != "") {
         fetch(`http://localhost:8080/task/name/${taskItem.id}`, {
           headers: {
             "Content-Type": "application/json",
           },
           method: "PATCH",
           body: JSON.stringify({
-            nome: result.value
+            nome: result.value,
+          }),
+        })
+          .then(() => {
+            if (taskItem.elementoPai == 0) {
+              setFind(true);
+            } else {
+              setFindchild(true);
+            }
           })
-        }).then(()=>{
-          if(taskItem.elementoPai == 0){
-            setFind(true);
-          }else{
-            setFindchild(true);
-          }
-        }).catch(err=>console.log(err));
+          .catch((err) => console.log(err));
       }
-    })
+    });
   }
 
-
-  function deleteTask(){
+  function deleteTask() {
     Swal.fire({
       showCancelButton: true,
       confirmButtonText: "Deletar",
@@ -78,28 +71,51 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
       titleText: "Deletar tarefa",
       text: "Tem certeza que deseja deletar?",
       cancelButtonColor: "#4EA8DE",
-      confirmButtonColor: "#C92722"
-    }).then(result => {
-      if(result.isConfirmed){
-        fetch(`http://localhost:8080/task/${taskItem.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "DELETE",
-        }).then(()=>{
-          if(taskItem.elementoPai == 0){
-            setFind(true);
-          }else{
-            setFindchild(true);
-          }
-        }).catch(err=>console.log(err));
+      confirmButtonColor: "#C92722",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (taskItem.temFilhos) {
+          Swal.fire({
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Sim, deletar todas!",
+            cancelButtonText: "Cancelar",
+            showDenyButton: true,
+            denyButtonColor: "#7066e0",
+            denyButtonText: "Sim, manter subtarefas!",
+            background: "#1a1a1a",
+            color: "white",
+            animation: true,
+            titleText: "Aviso!",
+            text: "A tarefa possui subtarefas, deseja prosseguir?",
+            cancelButtonColor: "#4EA8DE",
+            confirmButtonColor: "#C92722",
+          });
+        } else {
+          console.log("2");
+          // fetch(`http://localhost:8080/task/${taskItem.id}`, {
+          // headers: {
+          //   "Content-Type": "application/json",
+          // },
+          // method: "DELETE",
+          // }).then(()=>{
+          //   if(taskItem.elementoPai == 0){
+          //     setFind(true);
+          //   }else{
+          //     setFindchild(true);
+          //   }
+          // }).catch(err=>console.log(err));
+        }
       }
-    })
+    });
   }
 
   return (
     <div className={styles.task}>
-      <button onClick={markAsMade} className={taskItem.concluida ? styles.concluida : ""}></button>
+      <button
+        onClick={markAsMadeFunction}
+        className={taskItem.concluida ? styles.concluida : ""}
+      ></button>
       <Link href={`/task/${taskItem.id}`}>{taskItem.nome}</Link>
       <button onClick={editName}>
         <svg

@@ -6,8 +6,9 @@ import { Task } from "@/interface/Task.interface";
 import { GetServerSideProps } from "next";
 import { TaskChild } from "@/interface/TaskChild.interface";
 import InfoDescription from "@/components/InfoDescription";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { TaskContext } from "@/contexts/TaskContext";
+import { TaskAtualContext } from "@/contexts/TaskAtualContext";
 
 export const getServerSideProps: GetServerSideProps = async (context)=>{
   const id = context.params!.id;
@@ -46,9 +47,11 @@ export const getServerSideProps: GetServerSideProps = async (context)=>{
 
 export default function TaskPage( {taskAtual, taskList, idNumber} : Readonly<{taskAtual: Task, taskList: Task[], idNumber: number}>){
   const { setTaskList } = useContext(TaskContext);
+  const { tarefaatual, setTarefaatual } = useContext(TaskAtualContext);
 
   useEffect(()=>{
     setTaskList(taskList);
+    setTarefaatual(taskAtual);
   }, [idNumber, taskAtual, taskList])
 
   return (
@@ -61,7 +64,7 @@ export default function TaskPage( {taskAtual, taskList, idNumber} : Readonly<{ta
       <main>
         <Header/>
         <Form id={taskAtual.id}/>
-        <InfoDescription task={taskAtual}/>
+        <InfoDescription task={tarefaatual}/>
         <TaskList/>
       </main>
     </>
