@@ -3,11 +3,15 @@ import styles from './InfoDescription.module.scss';
 import Link from 'next/link';
 import Swal from 'sweetalert2';
 import useFindTaskAtual from '@/hooks/useFindTaskAtual';
+import { useContext } from 'react';
+import { LoadingContext } from '@/contexts/LoadingContext';
 
 export default function InfoDescription({task}: Readonly<{task: Task}>){
     const { setFindchild } = useFindTaskAtual(task?.id);
+    const {loading, setLoading} = useContext(LoadingContext);
 
     function atualizarDescricao(){
+        setLoading(true);
         Swal.fire({
             background: "rgb(26, 26, 26)",
             title: "Descrição",
@@ -34,6 +38,7 @@ export default function InfoDescription({task}: Readonly<{task: Task}>){
                .then(response => response.json())
                .then(()=>{
                 setFindchild(true);
+                setLoading(false);
                })
             }
         })
@@ -44,7 +49,7 @@ export default function InfoDescription({task}: Readonly<{task: Task}>){
             <h2>{task?.nome}</h2>
             {task?.description && task?.description.descricao !== "" ? <p>{task.description.descricao}</p> : false  }
             <div>
-                <button onClick={atualizarDescricao}>{!task?.description || task?.description?.descricao === "" ? "Criar Descrição" : "Alterar Descrição"}</button>
+                <button onClick={atualizarDescricao} disabled={loading}>{!task?.description || task?.description?.descricao === "" ? "Criar Descrição" : "Alterar Descrição"}</button>
                 <Link href={task?.elementoPai == 0 ? "/" : `/task/${task?.elementoPai}`}>
                     <button>
                         Voltar

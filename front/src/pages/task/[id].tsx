@@ -6,7 +6,7 @@ import { Task } from "@/interface/Task.interface";
 import { GetServerSideProps } from "next";
 import { TaskChild } from "@/interface/TaskChild.interface";
 import InfoDescription from "@/components/InfoDescription";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { TaskContext } from "@/contexts/TaskContext";
 import { TaskAtualContext } from "@/contexts/TaskAtualContext";
 

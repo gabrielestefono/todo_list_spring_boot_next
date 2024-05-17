@@ -1,3 +1,4 @@
+import { LoadingContextProvider } from "@/contexts/LoadingContext";
 import { TaskAtualContextProvider } from "@/contexts/TaskAtualContext";
 import { TaskContextProvider } from "@/contexts/TaskContext";
 import "@/styles/globals.scss";
@@ -7,7 +8,9 @@ export default function App({Component, pageProps} : Readonly<AppProps>) {
   return (
     <TaskContextProvider>
         <TaskAtualContextProvider>
-          <Component {...pageProps} />
+          <LoadingContextProvider>
+            <Component {...pageProps} />
+          </LoadingContextProvider>
         </TaskAtualContextProvider>
     </TaskContextProvider>
   );

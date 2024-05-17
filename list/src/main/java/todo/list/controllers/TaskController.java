@@ -55,6 +55,11 @@ public class TaskController {
         return this.taskService.maskAsMade(id);
     }
 
+    @PatchMapping(value = "/unmade/{id}", produces = "application/json")
+    public Task maskAsUnmade(@PathVariable Long id) {
+        return this.taskService.maskAsUnmade(id);
+    }
+
     @PatchMapping(value = "/description/{id}")
     public Task delete(@PathVariable Long id, @RequestBody Description description) {
         return this.taskService.addDescription(id, description);

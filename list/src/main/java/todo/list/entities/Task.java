@@ -36,6 +36,9 @@ public class Task implements Serializable {
 	private Boolean temFilhos = false;
 
 	@Column(nullable = false)
+	private Boolean filhosFeitos = true;
+
+	@Column(nullable = false)
 	private Date createdAt = new Date();
 
 	@Column
@@ -65,7 +68,7 @@ public class Task implements Serializable {
 		this.nome = nome;
 	}
 
-	public Boolean getConcluida() {
+	public boolean getConcluida() {
 		return concluida;
 	}
 
@@ -87,6 +90,14 @@ public class Task implements Serializable {
 
 	public void setTemFilhos(Boolean temFilhos) {
 		this.temFilhos = temFilhos;
+	}
+
+	public boolean getFilhosFeitos() {
+		return filhosFeitos;
+	}
+
+	public void setFilhosFeitos(Boolean filhosFeitos) {
+		this.filhosFeitos = filhosFeitos;
 	}
 
 	public Date getCreatedAt() {
@@ -121,6 +132,8 @@ public class Task implements Serializable {
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
 		result = prime * result + ((concluida == null) ? 0 : concluida.hashCode());
 		result = prime * result + ((elementoPai == null) ? 0 : elementoPai.hashCode());
+		result = prime * result + ((temFilhos == null) ? 0 : temFilhos.hashCode());
+		result = prime * result + ((filhosFeitos == null) ? 0 : filhosFeitos.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
 		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
@@ -156,6 +169,16 @@ public class Task implements Serializable {
 				return false;
 		} else if (!elementoPai.equals(other.elementoPai))
 			return false;
+		if (temFilhos == null) {
+			if (other.temFilhos != null)
+				return false;
+		} else if (!temFilhos.equals(other.temFilhos))
+			return false;
+		if (filhosFeitos == null) {
+			if (other.filhosFeitos != null)
+				return false;
+		} else if (!filhosFeitos.equals(other.filhosFeitos))
+			return false;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;
@@ -172,5 +195,5 @@ public class Task implements Serializable {
 		} else if (!description.equals(other.description))
 			return false;
 		return true;
-	}
+	}	
 }

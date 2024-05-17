@@ -38,6 +38,10 @@
                 justify-content: center;
             }
         }
+
+        &:disabled{
+            cursor: not-allowed;
+        }
     }
 
     > a{
@@ -58,10 +62,18 @@
         height: 1.25rem;
         flex-shrink: 0;
 
+        &:disabled{
+            cursor: not-allowed;
+          }
+
         > svg{
             > path{
                 stroke: gray;
             }
         }
     }
+}
+
+.disabled{
+    cursor: not-allowed;
 }

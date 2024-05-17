@@ -6,17 +6,18 @@ import { Task as TaskItems } from '@/interface/Task.interface';
 
 export default function TaskList() {
   const { taskList } = useContext(TaskContext);
+  const concluidas = taskList.filter((task: TaskItems) => task.concluida)
   return (
       <div className={styles.taskList}>
         <div>
           <div>
             <div className={styles.created}>
               <p>Tarefas criadas</p>
-              <span>16</span>
+              <span>{taskList.length}</span>
             </div>
             <div className={styles.concluded}>
               <p>Concluídas</p>
-              <span>0</span>
+              <span>{concluidas.length === 0 ? "0" : `${concluidas.length} de ${taskList.length}`}</span>
             </div>
           </div>
           <hr/>

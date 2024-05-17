@@ -6,6 +6,7 @@ export interface Task{
     concluida: boolean;
     elementoPai: number;
     temFilhos: boolean;
+    filhosFeitos: boolean;
     description: Description
     createdAt: Date;
     updatedAt?: Date;

@@ -1,123 +1,49 @@
 import { Task as TaskItem } from "@/interface/Task.interface";
 import styles from "./Task.module.scss";
-import { useRouter } from "next/router";
-import Swal from "sweetalert2";
 import Link from "next/link";
 import useFindTask from "@/hooks/useTaskFind";
 import useFindChildTask from "@/hooks/useTaskChildFind";
 import markAsMade from "@/utils/MarkAsMade";
+import editName from "@/utils/EditName";
+import deleteTask from "@/utils/DeleteTask";
+import { useContext } from "react";
+import { LoadingContext } from "@/contexts/LoadingContext";
 
 export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
-  const router = useRouter();
   const { setFind } = useFindTask();
   const { setFindchild } = useFindChildTask(taskItem.elementoPai);
+  const {loading, setLoading} = useContext(LoadingContext);
 
-  function markAsMadeFunction() {
-    markAsMade(taskItem.id, taskItem.elementoPai).then((result) => {
-      if (result) {
-        setFind(true);
-      } else {
-        setFindchild(true);
-      }
-    }).catch(err => {
-      return { notFound: true };
-    })
+  async function markAsMadeFunction() {
+    setLoading(true);
+    const funcaoCallBack = taskItem.elementoPai === 0 ? setFind : setFindchild;
+    await markAsMade(taskItem, funcaoCallBack);
+    setLoading(false);
   }
 
-  function editName() {
-    Swal.fire({
-      input: "text",
-      inputValue: taskItem.nome,
-      showCancelButton: true,
-      confirmButtonText: "Alterar",
-      cancelButtonText: "Cancelar",
-      background: "#1a1a1a",
-      color: "white",
-      animation: true,
-      titleText: "Editar tarefa",
-      text: "Digite o nome para a tarefa:",
-      cancelButtonColor: "#4EA8DE",
-    }).then((result) => {
-      if (result.isConfirmed && result.value != "") {
-        fetch(`http://localhost:8080/task/name/${taskItem.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          method: "PATCH",
-          body: JSON.stringify({
-            nome: result.value,
-          }),
-        })
-          .then(() => {
-            if (taskItem.elementoPai == 0) {
-              setFind(true);
-            } else {
-              setFindchild(true);
-            }
-          })
-          .catch((err) => console.log(err));
-      }
-    });
+  async function editNameFuncion(){
+    setLoading(true);
+    const funcaoCallBack = taskItem.elementoPai === 0 ? setFind : setFindchild;
+    await editName(taskItem.nome, taskItem.id, funcaoCallBack);
+    setLoading(false);
   }
 
-  function deleteTask() {
-    Swal.fire({
-      showCancelButton: true,
-      confirmButtonText: "Deletar",
-      cancelButtonText: "Cancelar",
-      background: "#1a1a1a",
-      color: "white",
-      animation: true,
-      titleText: "Deletar tarefa",
-      text: "Tem certeza que deseja deletar?",
-      cancelButtonColor: "#4EA8DE",
-      confirmButtonColor: "#C92722",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        if (taskItem.temFilhos) {
-          Swal.fire({
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Sim, deletar todas!",
-            cancelButtonText: "Cancelar",
-            showDenyButton: true,
-            denyButtonColor: "#7066e0",
-            denyButtonText: "Sim, manter subtarefas!",
-            background: "#1a1a1a",
-            color: "white",
-            animation: true,
-            titleText: "Aviso!",
-            text: "A tarefa possui subtarefas, deseja prosseguir?",
-            cancelButtonColor: "#4EA8DE",
-            confirmButtonColor: "#C92722",
-          });
-        } else {
-          console.log("2");
-          // fetch(`http://localhost:8080/task/${taskItem.id}`, {
-          // headers: {
-          //   "Content-Type": "application/json",
-          // },
-          // method: "DELETE",
-          // }).then(()=>{
-          //   if(taskItem.elementoPai == 0){
-          //     setFind(true);
-          //   }else{
-          //     setFindchild(true);
-          //   }
-          // }).catch(err=>console.log(err));
-        }
-      }
-    });
+  async function deleteTaskFunction(){
+    setLoading(true);
+    const funcaoCallBack = taskItem.elementoPai === 0 ? setFind : setFindchild;
+    await deleteTask(taskItem.id, taskItem.temFilhos, funcaoCallBack);
+    setLoading(false);
   }
 
   return (
     <div className={styles.task}>
       <button
+        disabled={loading}
         onClick={markAsMadeFunction}
         className={taskItem.concluida ? styles.concluida : ""}
       ></button>
-      <Link href={`/task/${taskItem.id}`}>{taskItem.nome}</Link>
-      <button onClick={editName}>
+      <Link href={`/task/${taskItem.id}`} className={loading ? styles.disabled : ""}>{taskItem.nome}</Link>
+      <button onClick={editNameFuncion} disabled={loading}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -133,7 +59,7 @@ export default function Task({ taskItem }: Readonly<{ taskItem: TaskItem }>) {
           ></path>
         </svg>
       </button>
-      <button onClick={deleteTask}>
+      <button onClick={deleteTaskFunction} disabled={loading}>
         <img
           src="/icons/lixo.svg"
           alt="excluir tarefa"

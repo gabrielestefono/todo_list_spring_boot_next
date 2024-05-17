@@ -38,6 +38,10 @@
       cursor: pointer;
       text-decoration: none;
       font-size: .875rem;
+
+      &:disabled{
+        cursor: not-allowed;
+      }
     }
 
     > button{

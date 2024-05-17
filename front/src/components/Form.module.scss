@@ -35,5 +35,9 @@
         color: #fff;
         font-size: .875rem;
         line-height: 1.125rem;
+
+        &:disabled{
+            cursor: not-allowed;
+        }
     }
 }
