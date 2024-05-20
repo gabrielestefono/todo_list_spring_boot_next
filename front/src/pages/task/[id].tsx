@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async (context)=>{
       return undefined;
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
     });
   
   if(res === undefined || res === null){

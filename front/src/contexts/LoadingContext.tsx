@@ -7,8 +7,6 @@ export const LoadingContextProvider = ({children}: {children: ReactNode}) => {
 
     const value = useMemo(()=>({loading, setLoading}), [loading]);
 
-    console.log(loading);
-
     return (
         <LoadingContext.Provider value={value}>
             {children}

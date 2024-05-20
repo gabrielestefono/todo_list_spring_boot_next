@@ -126,9 +126,9 @@ public class TaskService {
 		if(!Objects.equals(task.getElementoPai(), Long.valueOf(0))){
 			Task elementoPai = this.findById(task.getElementoPai());
 			elementoPai.setTemFilhos(true);
-			elementoPai.setFilhosFeitos(false);
 			this.taskRepository.save(elementoPai);
 		}
+		this.markAllParentAsUnmade(task);
 		return this.taskRepository.save(task);
 	}
 

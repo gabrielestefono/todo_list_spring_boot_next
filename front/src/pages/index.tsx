@@ -10,7 +10,7 @@ import { useContext, useEffect } from "react";
 export const getServerSideProps: GetServerSideProps = async (context)=>{
   const res: Task[] = await fetch('http://localhost:8080/task')
     .then(response => response.json())
-    .catch(err => console.log(err))
+    .catch(err => console.error(err))
 
   return {
     props: {

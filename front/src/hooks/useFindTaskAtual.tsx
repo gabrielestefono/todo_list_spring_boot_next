@@ -14,7 +14,7 @@ function useFindTaskAtual(id: number){
                 .then((data: TaskChild) => {
                     setTarefaatual(data.taskAtual);
                 }).catch((err) => {
-                    console.log(err);
+                    console.error(err);
                 });
                 setFindchild(false);
             }

@@ -10,6 +10,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -20,7 +21,7 @@ public class Task implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	@Column(nullable = false)
@@ -36,9 +37,6 @@ public class Task implements Serializable {
 	private Boolean temFilhos = false;
 
 	@Column(nullable = false)
-	private Boolean filhosFeitos = true;
-
-	@Column(nullable = false)
 	private Date createdAt = new Date();
 
 	@Column
@@ -47,6 +45,10 @@ public class Task implements Serializable {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "description_id")
 	private Description description;
+
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
 	public Task() {
 		// Empty Constructor
@@ -68,7 +70,7 @@ public class Task implements Serializable {
 		this.nome = nome;
 	}
 
-	public boolean getConcluida() {
+	public Boolean getConcluida() {
 		return concluida;
 	}
 
@@ -84,20 +86,12 @@ public class Task implements Serializable {
 		this.elementoPai = elementoPai;
 	}
 
-	public boolean getTemFilhos() {
+	public Boolean getTemFilhos() {
 		return temFilhos;
 	}
 
 	public void setTemFilhos(Boolean temFilhos) {
 		this.temFilhos = temFilhos;
-	}
-
-	public boolean getFilhosFeitos() {
-		return filhosFeitos;
-	}
-
-	public void setFilhosFeitos(Boolean filhosFeitos) {
-		this.filhosFeitos = filhosFeitos;
 	}
 
 	public Date getCreatedAt() {
@@ -124,6 +118,14 @@ public class Task implements Serializable {
 		this.description = description;
 	}
 
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -133,10 +135,10 @@ public class Task implements Serializable {
 		result = prime * result + ((concluida == null) ? 0 : concluida.hashCode());
 		result = prime * result + ((elementoPai == null) ? 0 : elementoPai.hashCode());
 		result = prime * result + ((temFilhos == null) ? 0 : temFilhos.hashCode());
-		result = prime * result + ((filhosFeitos == null) ? 0 : filhosFeitos.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
 		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
 		return result;
 	}
 
@@ -174,11 +176,6 @@ public class Task implements Serializable {
 				return false;
 		} else if (!temFilhos.equals(other.temFilhos))
 			return false;
-		if (filhosFeitos == null) {
-			if (other.filhosFeitos != null)
-				return false;
-		} else if (!filhosFeitos.equals(other.filhosFeitos))
-			return false;
 		if (createdAt == null) {
 			if (other.createdAt != null)
 				return false;
@@ -194,6 +191,11 @@ public class Task implements Serializable {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
+		if (user == null) {
+			if (other.user != null)
+				return false;
+		} else if (!user.equals(other.user))
+			return false;
 		return true;
-	}	
+	}
 }

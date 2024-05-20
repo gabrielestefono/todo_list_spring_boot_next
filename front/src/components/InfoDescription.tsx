@@ -38,9 +38,9 @@ export default function InfoDescription({task}: Readonly<{task: Task}>){
                .then(response => response.json())
                .then(()=>{
                 setFindchild(true);
-                setLoading(false);
                })
             }
+        setLoading(false);
         })
     }
 

@@ -14,7 +14,7 @@ function useFindChildTask(id: number){
                 .then((data: TaskChild) => {
                     setTaskList(data.tasksFilhas);
                 }).catch((err) => {
-                    console.log(err);
+                    console.error(err);
                 });
                 setFindchild(false);
             }
