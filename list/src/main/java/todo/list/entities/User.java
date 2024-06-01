@@ -23,7 +23,7 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false)
+	@Column(nullable = false, unique = true)
 	private String email;
 
 	@Column(nullable = false)
@@ -31,6 +31,9 @@ public class User implements Serializable{
 	
 	@Column(nullable = false)
 	private String nome;
+
+	@Column(nullable = false)
+	private Boolean enabled = true;
 
 	@Column(nullable = false)
 	private Date createdAt = new Date();
@@ -77,6 +80,14 @@ public class User implements Serializable{
 		this.nome = nome;
 	}
 
+	public Boolean getEnabled() {
+		return this.enabled;
+	}
+
+	public void setNome(Boolean enabled){
+		this.enabled = enabled;
+	}
+
 	public Date getCreatedAt() {
 		return createdAt;
 	}
@@ -109,6 +120,7 @@ public class User implements Serializable{
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
 		result = prime * result + ((senha == null) ? 0 : senha.hashCode());
 		result = prime * result + ((nome == null) ? 0 : nome.hashCode());
+		result = prime * result + ((enabled == null) ? 0 : enabled.hashCode());
 		result = prime * result + ((createdAt == null) ? 0 : createdAt.hashCode());
 		result = prime * result + ((updatedAt == null) ? 0 : updatedAt.hashCode());
 		result = prime * result + ((tasks == null) ? 0 : tasks.hashCode());
@@ -143,6 +155,11 @@ public class User implements Serializable{
 			if (other.nome != null)
 				return false;
 		} else if (!nome.equals(other.nome))
+			return false;
+		if (enabled == null) {
+			if (other.enabled != null)
+				return false;
+		} else if (!enabled.equals(other.enabled))
 			return false;
 		if (createdAt == null) {
 			if (other.createdAt != null)
